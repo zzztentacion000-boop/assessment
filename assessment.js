@@ -16,17 +16,62 @@ assessmentButton.addEventListener(
   　　
     //診断結果表示エリアの作成
       resultDivision.innerText = '';
-      tweetDivision.innerText = '';
-    　const header = document.createElement('h3');
+      tweetDivision.innerText = ''; //Tweetのdivタグも空にする
+      const anchor = document.createElement('a');
+      const hrefValue = 'https://twitter.com/intent/tweet?button_hashtag=' + encodeURIComponent('あなたのいいところ') +
+      '&ref_src=twsrc%5Etfw';
+
+      anchor.setAttribute('href', hrefValue);
+      anchor.setAttribute('class', 'twitter-hashtag-button');
+      anchor.setAttribute('data-text', '診断結果の文章');
+      anchor.innerText = 'Tweet #あなたのいいところ';
+      tweetDivision.appendChild(anchor);
+
+      const script = document.createElement('script');
+      script.setAttribute('src', 'https://platform.twitter.com/widgets.js');
+      tweetDivision.appendChild(script);
+
+    　/*const header = document.createElement('h3');
     　header.innerText = '診断結果';
     　resultDivision.appendChild(header);
 
     　const paragraph = document.createElement('p');
     　const result = assessment(userName);
-   　 paragraph.innerText = result;
-    　resultDivision.appendChild(paragraph);
+      paragraph.innerText = result;
+    　resultDivision.appendChild(paragraph);*/
+      
+      // headerDivision の作成
+      const headerDivision = document.createElement('div');
+      headerDivision.setAttribute('class', 'card-header text-bg-primary');
+      headerDivision.innerText = '診断結果';
+
+      // bodyDivision の作成
+      const bodyDivision = document.createElement('div');
+      bodyDivision.setAttribute('class', 'card-body');
+
+      const paragraph = document.createElement('p');
+      paragraph.setAttribute('class', 'card-text');
+      const result = assessment(userName);
+      paragraph.innerText = result;
+      bodyDivision.appendChild(paragraph);
+
+      // resultDivision に Bootstrap のスタイルを適用する
+      resultDivision.setAttribute('class', 'card');
+
+      // headerDivision と bodyDivision を resultDivision に差し込む
+      resultDivision.appendChild(headerDivision);
+      resultDivision.appendChild(bodyDivision);
 　　}
 );
+
+userNameInput.addEventListener(
+        'keydown',
+        (event) => {
+          if(event.code === 'Enter'){
+          assessmentButton.dispatchEvent(new Event('click'))
+        }
+    }
+)
 
 const answers = [
 '###userName###のいいところは声です。###userName###の特徴的な声は皆を惹きつけ、心に残ります。',
@@ -45,7 +90,6 @@ const answers = [
 '###userName###のいいところは気配りです。###userName###の配慮が多くの人を救っています。',
 '###userName###のいいところはそのすべてです。ありのままの###userName###自身がいいところなのです。',
 '###userName###のいいところは自制心です。やばいと思ったときにしっかりと衝動を抑えられる###userName###が皆から評価されています。',
-'###userName###のいいところは優しさです。###userName###の優しい雰囲気や立ち振る舞いに多くの人が癒やされています。'
 ];
 /*
  名前の文字列を渡すと診断結果を返す関数
@@ -102,6 +146,5 @@ function test() {
   
   console.log('診断結果の文章のテスト終了');
 };
-
 
 test();
